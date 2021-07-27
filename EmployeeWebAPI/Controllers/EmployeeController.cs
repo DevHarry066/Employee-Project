@@ -1,14 +1,18 @@
 ﻿using EmployeeWebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+
+using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmployeeWebAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
@@ -21,6 +25,8 @@ namespace EmployeeWebAPI.Controllers
             _dbContext = context;
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Employee>>> Get()
         {
@@ -47,6 +53,7 @@ namespace EmployeeWebAPI.Controllers
             //return StatusCode(StatusCodes.Status201Created);
         }
 
+        
         // PUT api/<EmployeesController>/5
         [HttpPut]
         public async Task<IActionResult> Put(Employee employee)
@@ -61,7 +68,6 @@ namespace EmployeeWebAPI.Controllers
             await _dbContext.SaveChangesAsync();
             return new JsonResult("Updated Successfully");
             
-            //return Ok("Employee Details updated successfully"+employee.EmployeeId);
         }
 
         // DELETE api/<EmployeesController>/5

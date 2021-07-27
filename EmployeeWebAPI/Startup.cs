@@ -1,4 +1,5 @@
 using EmployeeWebAPI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,14 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace EmployeeWebAPI
+namespace EmployeeWebAPI    
 {
     public class Startup
     {
@@ -31,28 +34,31 @@ namespace EmployeeWebAPI
         {
             services.AddDbContext<EmployeeContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("AngularConnection")));
 
-            /*services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
-            });
-             services.AddControllersWithViews()
-                 .AddNewtonsoftJson(options =>
-                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft
-                 .Json.ReferenceLoopHandling.Ignore)
-                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver
-                 = new DefaultContractResolver());
-
-             services.AddCors(c =>
-             {
-                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-             });
-            */
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EmployeeWebAPI", Version = "v1" });
+            });
+
+            string securityKey = "mycodeisverystrong";
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey));
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, x =>
+            {
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    IssuerSigningKey = symmetricSecurityKey,
+                    ValidateIssuerSigningKey = true
+                };
+
             });
 
             services.AddCors();
@@ -76,8 +82,9 @@ namespace EmployeeWebAPI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
