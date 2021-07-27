@@ -78,8 +78,8 @@ namespace EmployeeWebAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeWebAPI v1"));
             }
 
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthentication();
