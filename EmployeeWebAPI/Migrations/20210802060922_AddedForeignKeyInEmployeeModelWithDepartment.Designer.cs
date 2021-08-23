@@ -4,14 +4,16 @@ using EmployeeWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmployeeWebAPI.Migrations
 {
     [DbContext(typeof(EmployeeContext))]
-    partial class EmployeeContextModelSnapshot : ModelSnapshot
+    [Migration("20210802060922_AddedForeignKeyInEmployeeModelWithDepartment")]
+    partial class AddedForeignKeyInEmployeeModelWithDepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,7 @@ namespace EmployeeWebAPI.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("EmployeeWebAPI.Models.Employee", b =>
@@ -116,11 +118,11 @@ namespace EmployeeWebAPI.Migrations
 
             modelBuilder.Entity("EmployeeWebAPI.Models.Employee", b =>
                 {
-                    b.HasOne("EmployeeWebAPI.Models.Department", "Department")
+                    b.HasOne("EmployeeWebAPI.Models.Department", "Departments")
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
-                    b.Navigation("Department");
+                    b.Navigation("Departments");
                 });
 #pragma warning restore 612, 618
         }

@@ -19,6 +19,5 @@ namespace EmployeeWebAPI.Models
         [NotMapped]
         public IFormFile Image { get; set; }
         public string ImageUrl { get; set; }
-
     }
 }

@@ -37,7 +37,7 @@ namespace EmployeeWebAPI.Controllers
 
             _dbContext.Users.Add(user1);
             _dbContext.SaveChanges();
-            return new JsonResult("Added Successfully");
+            return new JsonResult("Registered Successfully");
 
         }
 
@@ -64,16 +64,17 @@ namespace EmployeeWebAPI.Controllers
 
             //return Token
             return new JsonResult(token.AccessToken);
-            return new JsonResult(new
+            
+            /*return new JsonResult(new
             {
                 access_token = token.AccessToken
-                /*,
+                ,
                 expires_in = token.ExpiresIn,
                 token_type = token.TokenType,
                 creation_Time = token.ValidFrom,
                 expiration_Time = token.ValidTo,
-                */
-            });
+              
+            });  */
         }
     }
 }

@@ -13,10 +13,13 @@ namespace EmployeeWebAPI.Models
         {
         }
         
-        public DbSet<Employee> Employees { get; set; }
+       // public DbSet<Employee> Employees { get; set; }
+        public DbSet<Employee> Employeess { get; set; }
 
         public DbSet<User> Users { get; set; }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Department> Departments { get; set; }
+
     }
 }

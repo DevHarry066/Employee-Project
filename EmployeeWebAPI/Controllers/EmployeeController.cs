@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeWebAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
@@ -26,44 +26,72 @@ namespace EmployeeWebAPI.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> Get()
+        public IEnumerable<Employee> Get()
         {
-            return await _dbContext.Employees.ToListAsync();
-            //return StatusCode(StatusCodes.Status200OK);
+           // return await _dbContext.Employeess.ToListAsync();
+
+            //var employees = _dbContext.Employeess.Include(e=>e.Department);
+            //return employees.ToList();
+            ////return StatusCode(StatusCodes.Status200OK);
+
+            var emp = _dbContext.Employeess.ToList();
+            var dep = _dbContext.Departments.ToList();
+
+            var res = from e in emp
+                      join d in dep on e.DepartmentId equals d.DepartmentId
+                      select e;
+
+            return res;
+
+
+
         }
 
         // GET api/<EmployeesController>/5
         [HttpGet("{id}")]
         public IActionResult GetWithId(int id)
         {
-            var c = _dbContext.Employees.Find(id);  //Get Employee with Id
+            var c = _dbContext.Employeess.Find(id);  //Get Employee with Id
             if (c == null) return NotFound("Employee Not Found");
             return Ok(c);
         }
+
+        
 
         // POST api/<EmployeesController>
         [HttpPost]
         public async Task<ActionResult<Employee>> Post(Employee employee)
         {
-            _dbContext.Employees.Add(employee); //Add new Employee details
-            await _dbContext.SaveChangesAsync();
-            return new JsonResult("Added Successfully");
-            //return StatusCode(StatusCodes.Status201Created);
+                _dbContext.Employeess.Add(employee); //Add new Employee details
+                await _dbContext.SaveChangesAsync();
+               return new JsonResult("Added Successfully");
+                //return StatusCode(StatusCodes.Status201Created);
         }
 
-        
+        //[HttpPost]
+        //public async Task<ActionResult<Employee>> PostEmployeeDepartment(Employee employee, Department department)
+        //{
+
+        //    _dbContext.Employeess.Add(employee); //Add new Employee details
+        //    _dbContext.Departments.Add(department); //Add new Employee details
+
+        //    await _dbContext.SaveChangesAsync();
+        //    return new JsonResult("Added Successfully");
+
+        //}
+
+
         // PUT api/<EmployeesController>/5
         [HttpPut]
         public async Task<IActionResult> Put(Employee employee)
         {
             
-            var c = _dbContext.Employees.Find(employee.EmployeeId);
+            var c = _dbContext.Employeess.Find(employee.EmployeeId);
             if (c == null) return NotFound("Id not found"+ employee.EmployeeId);
 
             c.EmployeeName = employee.EmployeeName;
-            c.Department = employee.Department;
             c.DateOfJoining = employee.DateOfJoining;
             await _dbContext.SaveChangesAsync();
             return new JsonResult("Updated Successfully");
@@ -74,9 +102,9 @@ namespace EmployeeWebAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var c = _dbContext.Employees.Find(id);
+            var c = _dbContext.Employeess.Find(id);
             if (c == null) return NotFound("Id not found in database");
-            _dbContext.Employees.Remove(c); //Delete Employee
+            _dbContext.Employeess.Remove(c); //Delete Employee
             _dbContext.SaveChanges();
             return new JsonResult("Deleted Successfully");
         }
@@ -85,13 +113,12 @@ namespace EmployeeWebAPI.Controllers
         [HttpGet("[action]")]
         public IActionResult FindEmployee(string employeeName)
         {
-            var employees = from employee in _dbContext.Employees
+            var employees = from employee in _dbContext.Employeess
                             where employee.EmployeeName.StartsWith(employeeName) //Searching Concept
                             select new
                             {
                                 EmployeeId = employee.EmployeeId,
                                 EmployeeName = employee.EmployeeName,
-                                Department = employee.Department,
                                 DateOfJoining = employee.DateOfJoining,
                                 
                             };
