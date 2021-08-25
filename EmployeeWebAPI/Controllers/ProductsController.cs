@@ -44,49 +44,41 @@ namespace EmployeeWebAPI.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpPut({"id"})]
+       [HttpPut("{id}")]
 
         public IActionResult Put(int id, [FromForm] Product product)
         {
         var p = _dbContext.Products.Find(id);
-        if(p==null)
-        {
-            return NotFound("not found");
+           if(p==null)
+           {
+              return NotFound("not found");
+           }
+
+           else
+           {
+              var guid = Guid.NewGuid();
+              var filePath=Path.Combine("wwwroot",guid+".jpg");
+              if(product.Image!=null)
+              {
+                 var fileStream = new FileStream(filePath, FileMode.Create);
+                 product.Image.CopyTo(fileStream);
+                 product.ImageUrl = filePath.Remove(0, 7);
+              }
+
+               p.ProductName = product.ProductName;
+               p.Rating = product.Rating;
+               p.Categories = product.Categories;
+               p.SKU = product.SKU;
+               p.Discount = product.Discount;
+               p.Percentage = product.Percentage;
+               p.Details = product.Details;
+               p.Tag = product.Tag;
+               p.Price = product.Price;
+               p.Stock = product.Stock;
+
+               _dbContext.SaveChanges();
+                return Ok("Updated Succeessfully");
+           }
         }
-
-        else
-        {
-            var guid = Guid.NewGuid();
-            var filePath=Path.Combine("wwwroot",guid+".jpg");
-            if(product.Image!=null)
-            {
-                var fileStream = new FileStream(filePath, FileMode.Create);
-                product.Image.CopyTo(fileStream);
-                product.ImageUrl = filePath.Remove(0, 7);
-
-            }
-
-            p.ProductName = product.ProductName;
-            p.Rating = product.Rating;
-            p.Categories = product.Categories;
-            p.SKU = product.SKU;
-            p.Discount = product.Discount;
-            p.Percentage = product.Percentage;
-            p.Details = product.Details;
-            p.Tag = product.Tag;
-            p.Price = product.Price;
-            p.Stock = product.Stock;
-
-            _dbContext.SaveChanges();
-            return OK("Updated Succeessfully");
-        }
-
-        }
-
-
-
-
-
-
     }
 }
