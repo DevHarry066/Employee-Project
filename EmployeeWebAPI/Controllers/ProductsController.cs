@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -21,7 +22,18 @@ namespace EmployeeWebAPI.Controllers
         public IEnumerable<Product> GetAll()
         {
             return _dbContext.Products;
+
+           
         }
+
+        [HttpGet("{id}")]
+        public Product GetProduct(int id)
+        {
+            var product = _dbContext.Products.Find(id);  //Get Employee with Id
+            //if (product == null) return NotFound("Employee Not Found");
+            return product;
+        }
+
 
         [HttpPost]
         public IActionResult Post([FromForm] Product product)
@@ -62,7 +74,7 @@ namespace EmployeeWebAPI.Controllers
               {
                  var fileStream = new FileStream(filePath, FileMode.Create);
                  product.Image.CopyTo(fileStream);
-                 product.ImageUrl = filePath.Remove(0, 7);
+                 p.ImageUrl = filePath.Remove(0, 7);
               }
 
                p.ProductName = product.ProductName;
@@ -75,10 +87,20 @@ namespace EmployeeWebAPI.Controllers
                p.Tag = product.Tag;
                p.Price = product.Price;
                p.Stock = product.Stock;
-
+               p.Image = product.Image;
                _dbContext.SaveChanges();
                 return Ok("Updated Succeessfully");
            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var p = _dbContext.Products.Find(id);
+            if (p == null) return NotFound("Not found to delete");
+            _dbContext.Products.Remove(p);
+            _dbContext.SaveChanges();
+            return Ok("Deleted");
         }
     }
 }
