@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EmployeeWebAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,19 @@ namespace EmployeeWebAPI.Controllers
     [ApiController]
     public class FormController : ControllerBase
     {
+        private EmployeeContext _dbContext;
+
+        public FormController(EmployeeContext context)
+        {
+            _dbContext = context;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Form>> Post(Form form)
+        {
+            _dbContext.Forms.Add(form); 
+            await _dbContext.SaveChangesAsync();
+            return new JsonResult("Your form is submtted, we will reach to you");
+        }
     }
 }
