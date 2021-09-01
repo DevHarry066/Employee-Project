@@ -22,6 +22,8 @@ namespace EmployeeWebAPI.Models
         public DbSet<Department> Departments { get; set; }
         public DbSet<Form> Forms { get; set; }
         public DbSet<CartItem> ShoppingCartItems { get; set; }
+        public DbSet<DealOfDay> DealOfDays { get; set; }
+        public DbSet<BestSellerItem> BestSellerItems { get; set; }
 
     }
 }

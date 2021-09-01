@@ -10,11 +10,11 @@ namespace EmployeeWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FormController : ControllerBase
+    public class ContactFormController : ControllerBase
     {
         private EmployeeContext _dbContext;
 
-        public FormController(EmployeeContext context)
+        public ContactFormController(EmployeeContext context)
         {
             _dbContext = context;
         }

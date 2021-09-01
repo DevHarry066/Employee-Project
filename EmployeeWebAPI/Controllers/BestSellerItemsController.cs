@@ -1,7 +1,6 @@
 ﻿using EmployeeWebAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,38 +10,30 @@ namespace EmployeeWebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DealBestSellerController : ControllerBase
+    public class BestSellerItemsController : ControllerBase
     {
         private EmployeeContext _dbContext;
 
-        public DealBestSellerController(EmployeeContext context)
+        public BestSellerItemsController(EmployeeContext context)
         {
             _dbContext = context;
         }
 
-/*
-        [HttpGet]
-        public IEnumerable<Product> GetDealProducts()
-        {
-            return _dbContext.Products.Take(4);
-        }
-  */      
-
         [HttpGet("[action]")]
-        public IActionResult GetDeal()
+        public IActionResult GetBestSellerDeal()
         {
             var id1 = new List<int>();
-            
-            var productIds = from productId in _dbContext.DealOfDays
+
+            var productIds = from productId in _dbContext.BestSellerItems
                              select new
                              {
                                  Id = productId.ProductId
                              };
 
-            
-           var ids = productIds.ToList();
-            
-            foreach(var id in ids)
+
+            var ids = productIds.ToList();
+
+            foreach (var id in ids)
             {
                 id1.Add(id.Id);
             }
@@ -56,10 +47,9 @@ namespace EmployeeWebAPI.Controllers
         {
             var product = _dbContext.Products.Find(productId);
 
-            var deal = new DealOfDay();
-            deal.ProductId = productId;
-            deal.Product = product;
-            _dbContext.DealOfDays.Add(deal);
+            var bestSeller = new BestSellerItem();
+            bestSeller.ProductId = productId;
+            _dbContext.BestSellerItems.Add(bestSeller);
             _dbContext.SaveChanges();
             return Ok("Deal Product Added");
         }
@@ -68,20 +58,16 @@ namespace EmployeeWebAPI.Controllers
         public IActionResult Delete(int id)
         {
 
-           var d= _dbContext.DealOfDays.Find(id);
+            var d = _dbContext.BestSellerItems.Find(id);
             if (d == null) return Ok("Not available");
 
-            _dbContext.DealOfDays.Remove(d);
+            _dbContext.BestSellerItems.Remove(d);
             _dbContext.SaveChanges();
             return Ok("Deleted");
 
 
         }
 
-        [HttpGet("[action]")]
-        public IEnumerable<Product> GetBestSeller()
-        {
-            return _dbContext.Products.Skip(2).Take(6);
-        }
+
     }
 }

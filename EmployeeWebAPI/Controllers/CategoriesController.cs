@@ -24,7 +24,7 @@ namespace EmployeeWebAPI.Controllers
         public IActionResult FindEmployee(string category)
         {
             var products = from product in _dbContext.Products
-                            where product.Categories.StartsWith(category) //Searching Concept
+                            where product.Categories.Contains(category) //Searching Concept
                             select new
                             {
                                 Id = product.Id,

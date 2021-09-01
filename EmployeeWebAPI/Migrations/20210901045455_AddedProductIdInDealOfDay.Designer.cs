@@ -4,35 +4,22 @@ using EmployeeWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmployeeWebAPI.Migrations
 {
     [DbContext(typeof(EmployeeContext))]
-    partial class EmployeeContextModelSnapshot : ModelSnapshot
+    [Migration("20210901045455_AddedProductIdInDealOfDay")]
+    partial class AddedProductIdInDealOfDay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("EmployeeWebAPI.Models.BestSellerItem", b =>
-                {
-                    b.Property<int>("SellerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SellerId");
-
-                    b.ToTable("BestSellerItems");
-                });
 
             modelBuilder.Entity("EmployeeWebAPI.Models.CartItem", b =>
                 {

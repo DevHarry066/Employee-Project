@@ -41,12 +41,19 @@ namespace EmployeeWebAPI.Controllers
         public IActionResult Post(int productId)
         {
             var product = _dbContext.Products.Find(productId);
-            var cartItem = new CartItem
-                           {
-                               Product = product,
-                               Quantity = 1,
-                               ProductId=productId
-                           };
+            /*  var cartItem = new CartItem
+                             {
+                                 Product = _dbContext.Products.Find(productId),
+                                 Quantity = 1,
+                                 ProductId=productId
+                             };
+            */
+
+            var cartItem = new CartItem();
+            //cartItem.ProductId = productId;
+            cartItem.Product = product;
+            cartItem.CartId = "333";
+            cartItem.Quantity = 1;
             _dbContext.ShoppingCartItems.Add(cartItem);
             _dbContext.SaveChanges();
             return Ok("Added Successfully");
@@ -54,9 +61,10 @@ namespace EmployeeWebAPI.Controllers
         }
 
 
-        
-      
-
-
+        [HttpGet]
+        public IEnumerable<CartItem> Get()
+        {
+            return _dbContext.ShoppingCartItems;
+        }
     }
 }

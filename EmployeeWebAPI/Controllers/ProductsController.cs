@@ -29,8 +29,8 @@ namespace EmployeeWebAPI.Controllers
         [HttpGet("{id}")]
         public Product GetProduct(int id)
         {
-            var product = _dbContext.Products.Find(id);  //Get Employee with Id
-            //if (product == null) return NotFound("Employee Not Found");
+            var product = _dbContext.Products.Find(id); 
+            //if (product == null) return NotFound("Not Found");
             return product;
         }
 
