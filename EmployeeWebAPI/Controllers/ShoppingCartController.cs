@@ -38,33 +38,43 @@ namespace EmployeeWebAPI.Controllers
        */
 
         [HttpPost]
-        public IActionResult Post(int productId)
+        public IActionResult Post(CartItem cartItem)
         {
-            var product = _dbContext.Products.Find(productId);
-            /*  var cartItem = new CartItem
-                             {
-                                 Product = _dbContext.Products.Find(productId),
-                                 Quantity = 1,
-                                 ProductId=productId
-                             };
-            */
-
-            var cartItem = new CartItem();
-            //cartItem.ProductId = productId;
-            cartItem.Product = product;
-            cartItem.CartId = "333";
-            cartItem.Quantity = 1;
+            cartItem.CartId = "FDC123";
             _dbContext.ShoppingCartItems.Add(cartItem);
             _dbContext.SaveChanges();
-            return Ok("Added Successfully");
+            return Ok("Added Successfully into cart");
 
         }
 
 
         [HttpGet]
-        public IEnumerable<CartItem> Get()
+        public IActionResult GetCartDetails()
         {
-            return _dbContext.ShoppingCartItems;
+            var carts = from cart in _dbContext.ShoppingCartItems
+                        join product in _dbContext.Products
+                        on cart.ProductId equals product.Id
+                        select new
+                        {
+                            Id = cart.ItemId,
+                            imageUrl = product.ImageUrl,
+                            productName=product.ProductName,
+                            price = product.Price,
+                            quantity = cart.Quantity
+                        };
+
+            return Ok(carts);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var cart=_dbContext.ShoppingCartItems.Find(id);
+            if (cart == null) return Ok("Not Found");
+            _dbContext.ShoppingCartItems.Remove(cart);
+            _dbContext.SaveChanges();
+            return Ok("Removed item from cart");
+
         }
     }
 }

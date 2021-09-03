@@ -4,14 +4,16 @@ using EmployeeWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EmployeeWebAPI.Migrations
 {
     [DbContext(typeof(EmployeeContext))]
-    partial class EmployeeContextModelSnapshot : ModelSnapshot
+    [Migration("20210902054648_AddedProductTestModelForCheck")]
+    partial class AddedProductTestModelForCheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,6 +73,8 @@ namespace EmployeeWebAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("DealId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("DealOfDays");
                 });
@@ -259,6 +263,17 @@ namespace EmployeeWebAPI.Migrations
                     b.HasOne("EmployeeWebAPI.Models.ProductTest", null)
                         .WithMany("CartItems")
                         .HasForeignKey("ProductTestId");
+                });
+
+            modelBuilder.Entity("EmployeeWebAPI.Models.DealOfDay", b =>
+                {
+                    b.HasOne("EmployeeWebAPI.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("EmployeeWebAPI.Models.Employee", b =>

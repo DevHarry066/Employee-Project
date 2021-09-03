@@ -1,11 +1,7 @@
 ﻿using EmployeeWebAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace EmployeeWebAPI.Controllers
 {
@@ -20,14 +16,28 @@ namespace EmployeeWebAPI.Controllers
             _dbContext = context;
         }
 
-/*
-        [HttpGet]
-        public IEnumerable<Product> GetDealProducts()
-        {
-            return _dbContext.Products.Take(4);
-        }
-  */      
 
+        [HttpGet]
+        public IActionResult GetDealProducts()
+        {
+            var deals=  from deal in _dbContext.DealOfDays
+                        join product in _dbContext.Products
+                        on deal.ProductId equals product.Id
+                        select new
+                        {
+                            Id = product.Id,
+                            imageUrl = product.ImageUrl,
+                            productName=product.ProductName,
+                            price = product.Price,
+                            discount=product.Discount,
+                            percentage=product.Percentage
+                        };
+
+            return Ok(deals);
+        
+         
+        }
+        /*
         [HttpGet("[action]")]
         public IActionResult GetDeal()
         {
@@ -50,15 +60,15 @@ namespace EmployeeWebAPI.Controllers
             var rows = _dbContext.Products.Where(t => id1.Contains(t.Id));
             return Ok(rows);
         }
+        */
 
         [HttpPost]
         public IActionResult Post(int productId)
         {
-            var product = _dbContext.Products.Find(productId);
+            //var product = _dbContext.Products.Find(productId);
 
             var deal = new DealOfDay();
             deal.ProductId = productId;
-            deal.Product = product;
             _dbContext.DealOfDays.Add(deal);
             _dbContext.SaveChanges();
             return Ok("Deal Product Added");

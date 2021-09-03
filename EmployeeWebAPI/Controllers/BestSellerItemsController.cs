@@ -22,31 +22,27 @@ namespace EmployeeWebAPI.Controllers
         [HttpGet("[action]")]
         public IActionResult GetBestSellerDeal()
         {
-            var id1 = new List<int>();
-
-            var productIds = from productId in _dbContext.BestSellerItems
-                             select new
-                             {
-                                 Id = productId.ProductId
-                             };
 
 
-            var ids = productIds.ToList();
+            var bestSellers = from seller in _dbContext.BestSellerItems
+                        join product in _dbContext.Products
+                        on seller.ProductId equals product.Id
+                        select new
+                        {
+                            Id = product.Id,
+                            imageUrl = product.ImageUrl,
+                            productName = product.ProductName,
+                            price = product.Price,
+                            discount = product.Discount,
+                            percentage = product.Percentage
+                        };
 
-            foreach (var id in ids)
-            {
-                id1.Add(id.Id);
-            }
-
-            var rows = _dbContext.Products.Where(t => id1.Contains(t.Id));
-            return Ok(rows);
+            return Ok(bestSellers);
         }
 
         [HttpPost]
         public IActionResult Post(int productId)
         {
-            var product = _dbContext.Products.Find(productId);
-
             var bestSeller = new BestSellerItem();
             bestSeller.ProductId = productId;
             _dbContext.BestSellerItems.Add(bestSeller);
@@ -65,9 +61,6 @@ namespace EmployeeWebAPI.Controllers
             _dbContext.SaveChanges();
             return Ok("Deleted");
 
-
         }
-
-
     }
 }

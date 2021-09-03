@@ -24,6 +24,6 @@ namespace EmployeeWebAPI.Models
         public DbSet<CartItem> ShoppingCartItems { get; set; }
         public DbSet<DealOfDay> DealOfDays { get; set; }
         public DbSet<BestSellerItem> BestSellerItems { get; set; }
-
+        public DbSet<ProductTest> ProductTests { get; set; }
     }
 }
