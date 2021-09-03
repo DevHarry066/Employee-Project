@@ -1,4 +1,5 @@
 ﻿using EmployeeWebAPI.Models;
+using EmployeeWebAPI.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,22 @@ namespace EmployeeWebAPI.Controllers
     public class DealBestSellerController : ControllerBase
     {
         private EmployeeContext _dbContext;
+        private IDealOfDayService dayService;
 
-        public DealBestSellerController(EmployeeContext context)
+        public DealBestSellerController(EmployeeContext context, IDealOfDayService service)
         {
             _dbContext = context;
+            dayService = service;
         }
 
 
         [HttpGet]
         public IActionResult GetDealProducts()
         {
-            var deals=  from deal in _dbContext.DealOfDays
+
+            var deals = dayService.GetDealProducts();
+
+            var deals1=  from deal in _dbContext.DealOfDays
                         join product in _dbContext.Products
                         on deal.ProductId equals product.Id
                         select new
@@ -33,9 +39,7 @@ namespace EmployeeWebAPI.Controllers
                             percentage=product.Percentage
                         };
 
-            return Ok(deals);
-        
-         
+            return Ok(deals);         
         }
         /*
         [HttpGet("[action]")]

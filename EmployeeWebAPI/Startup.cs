@@ -1,4 +1,5 @@
 using EmployeeWebAPI.Models;
+using EmployeeWebAPI.Models.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,8 @@ namespace EmployeeWebAPI
             services.AddDbContext<EmployeeContext>(opts => opts.UseSqlServer(Configuration.GetConnectionString("AngularConnection")));
 
             services.AddControllers();
+
+            services.AddScoped<IDealOfDayService, DealOfDayService>();
 
             services.AddSwaggerGen(c =>
             {
