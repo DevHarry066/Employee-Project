@@ -32,5 +32,24 @@ namespace EmployeeWebAPI.Models.Services
 
             return deals;
         }
+
+        public string AddDealIntoDatabase(int productId)
+        {
+            var deal = new DealOfDay();
+            deal.ProductId = productId;
+            _dbContext.DealOfDays.Add(deal);
+            _dbContext.SaveChanges();
+            return "Added Successfully";
+        }
+
+        public string DeleteDealProductFromDatabase(int productId)
+        {
+            var d = _dbContext.DealOfDays.Find(productId);
+            if (d == null) return "Not available";
+
+            _dbContext.DealOfDays.Remove(d);
+            _dbContext.SaveChanges();
+            return "Removed successfully";
+        }
     }
 }

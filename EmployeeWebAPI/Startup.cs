@@ -1,5 +1,6 @@
 using EmployeeWebAPI.Models;
 using EmployeeWebAPI.Models.Services;
+using EmployeeWebAPI.Models.Services.BestSellerService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,8 @@ namespace EmployeeWebAPI
             services.AddControllers();
 
             services.AddScoped<IDealOfDayService, DealOfDayService>();
+
+            services.AddScoped<IBestSellerItemsService, BestSellerItemsService>();
 
             services.AddSwaggerGen(c =>
             {

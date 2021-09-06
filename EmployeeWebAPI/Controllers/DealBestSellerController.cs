@@ -10,12 +10,10 @@ namespace EmployeeWebAPI.Controllers
     [ApiController]
     public class DealBestSellerController : ControllerBase
     {
-        private EmployeeContext _dbContext;
         private IDealOfDayService dayService;
 
-        public DealBestSellerController(EmployeeContext context, IDealOfDayService service)
+        public DealBestSellerController(IDealOfDayService service)
         {
-            _dbContext = context;
             dayService = service;
         }
 
@@ -25,22 +23,30 @@ namespace EmployeeWebAPI.Controllers
         {
 
             var deals = dayService.GetDealProducts();
-
-            var deals1=  from deal in _dbContext.DealOfDays
-                        join product in _dbContext.Products
-                        on deal.ProductId equals product.Id
-                        select new
-                        {
-                            Id = product.Id,
-                            imageUrl = product.ImageUrl,
-                            productName=product.ProductName,
-                            price = product.Price,
-                            discount=product.Discount,
-                            percentage=product.Percentage
-                        };
-
             return Ok(deals);         
         }
+        
+        [HttpPost]
+        public IActionResult Post(int productId)
+        {
+
+            string message = dayService.AddDealIntoDatabase(productId);
+            return Ok(message);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            string message = dayService.DeleteDealProductFromDatabase(id);
+            return Ok(message);
+        }
+
+        /*[HttpGet("[action]")]
+        public IEnumerable<Product> GetBestSeller()
+        {
+            return _dbContext.Products.Skip(2).Take(6);
+        }
+        */
         /*
         [HttpGet("[action]")]
         public IActionResult GetDeal()
@@ -66,36 +72,5 @@ namespace EmployeeWebAPI.Controllers
         }
         */
 
-        [HttpPost]
-        public IActionResult Post(int productId)
-        {
-            //var product = _dbContext.Products.Find(productId);
-
-            var deal = new DealOfDay();
-            deal.ProductId = productId;
-            _dbContext.DealOfDays.Add(deal);
-            _dbContext.SaveChanges();
-            return Ok("Deal Product Added");
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-
-           var d= _dbContext.DealOfDays.Find(id);
-            if (d == null) return Ok("Not available");
-
-            _dbContext.DealOfDays.Remove(d);
-            _dbContext.SaveChanges();
-            return Ok("Deleted");
-
-
-        }
-
-        [HttpGet("[action]")]
-        public IEnumerable<Product> GetBestSeller()
-        {
-            return _dbContext.Products.Skip(2).Take(6);
-        }
     }
 }
