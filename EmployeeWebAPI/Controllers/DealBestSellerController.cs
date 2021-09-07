@@ -10,7 +10,7 @@ namespace EmployeeWebAPI.Controllers
     [ApiController]
     public class DealBestSellerController : ControllerBase
     {
-        private IDealOfDayService dayService;
+        private readonly IDealOfDayService dayService;
 
         public DealBestSellerController(IDealOfDayService service)
         {

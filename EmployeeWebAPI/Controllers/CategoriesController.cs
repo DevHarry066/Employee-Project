@@ -12,7 +12,7 @@ namespace EmployeeWebAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private EmployeeContext _dbContext;
+        private readonly EmployeeContext _dbContext;
 
         public CategoriesController(EmployeeContext context)
         {

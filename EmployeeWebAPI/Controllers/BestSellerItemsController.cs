@@ -13,7 +13,7 @@ namespace EmployeeWebAPI.Controllers
     [ApiController]
     public class BestSellerItemsController : ControllerBase
     {
-        private IBestSellerItemsService bestSellerService;
+        private readonly IBestSellerItemsService bestSellerService;
 
         public BestSellerItemsController(IBestSellerItemsService bestSellerItemsService)
         {

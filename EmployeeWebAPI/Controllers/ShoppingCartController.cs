@@ -20,23 +20,7 @@ namespace EmployeeWebAPI.Controllers
             _dbContext = context;
         }
 
-       /* [HttpPost]
-        public IActionResult Post(int productId)
-        {
-            var product = _dbContext.ShoppingCartItems.SingleOrDefault(c=>c.ProductId==productId);
-
-            product = new CartItem
-            {
-                ProductId = productId,
-                Product = _dbContext.Products.SingleOrDefault(p => p.Id == productId),
-                Quantity = 1,
-            };
-            _dbContext.ShoppingCartItems.Add(product);
-            _dbContext.SaveChanges();
-            return Ok("Added Successfully");
-        }
-       */
-
+     
         [HttpPost]
         public IActionResult Post(CartItem cartItem)
         {
@@ -76,5 +60,23 @@ namespace EmployeeWebAPI.Controllers
             return Ok("Removed item from cart");
 
         }
+
+        /* [HttpPost]
+      public IActionResult Post(int productId)
+      {
+          var product = _dbContext.ShoppingCartItems.SingleOrDefault(c=>c.ProductId==productId);
+
+          product = new CartItem
+          {
+              ProductId = productId,
+              Product = _dbContext.Products.SingleOrDefault(p => p.Id == productId),
+              Quantity = 1,
+          };
+          _dbContext.ShoppingCartItems.Add(product);
+          _dbContext.SaveChanges();
+          return Ok("Added Successfully");
+      }
+     */
+
     }
 }
